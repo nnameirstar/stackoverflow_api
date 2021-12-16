@@ -7,6 +7,11 @@
 from flask import Flask
 from flask_restful import Api, Resource
 import pandas as pd
+import numpy as np
+from bs4 import BeautifulSoup
+import nltk
+from nltk.corpus import stopwords
+import re
 import joblib
 import spacy
 import en_core_web_sm
@@ -25,13 +30,7 @@ api = Api(app)
 # In[3]:
 
 
-def remove_pos(nlp, x, pos_list):
-    # Test of language detection
-    lang = detect(x)
-    if(lang != "en"):
-        # Deep translate if not in English
-        x = GoogleTranslator(source='auto', target='en').translate(x)
-    
+def remove_pos(nlp, x, pos_list): 
     doc = nlp(x)
     list_text_row = []
     for token in doc:
