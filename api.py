@@ -94,7 +94,7 @@ vectorizer = TfidfVectorizer(analyzer="word",
 
 
 multilabel_binarizer = MultiLabelBinarizer()
-
+model = joblib.load("regression_logistique.joblib", 'r')
 
 # In[7]:
 
@@ -134,7 +134,6 @@ class Autotag(Resource):
         
         # Apply saved trained TfidfVectorizer
         X_tfidf = vectorizer.transform([cleaned_question])
-        model=OneVsRestClassifier(estimator=LogisticRegression())
         # Perform prediction
         predict = model.predict(X_tfidf)
         predict_probas = model.predict_proba(X_tfidf)
