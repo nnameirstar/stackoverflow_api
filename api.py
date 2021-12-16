@@ -101,6 +101,30 @@ multilabel_binarizer = MultiLabelBinarizer()
 
 class Autotag(Resource):
     def get(self, question):
+        """
+       This examples uses FlaskRESTful Resource for Stackoverflow auto-tagging questions
+       To test, copy and paste a non-cleaned question (even with HTML tags or code) and execute the model.
+       ---
+       parameters:
+         - in: path
+           name: question
+           type: string
+           required: true
+       responses:
+         '200':
+           description: Predicted list of tags and probabilities
+           content:
+               application/json:
+                   schema:
+                       type: object
+                       properties:
+                           Predicted_Tags:
+                               type: string
+                               description: List of predicted tags with over 50% of probabilities.
+                           Predicted_Tags_Probabilities:
+                               type: string
+                               description: List of tags with over 30% of probabilities
+        """
         # Clean the question sent
         nlp = en_core_web_sm.load(exclude=['tok2vec', 'ner', 'parser', 'attribute_ruler', 'lemmatizer'])
         #nlp = spacy.load('en_core_web_md', exclude=['tok2vec', 'ner', 'parser', 'attribute_ruler', 'lemmatizer'])
