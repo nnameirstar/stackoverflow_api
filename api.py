@@ -144,13 +144,13 @@ class Autotag(Resource):
         df_predict_probas = pd.DataFrame(columns=['Tags', 'Probas'])
         df_predict_probas['Tags'] = multilabel_binarizer.classes_
         df_predict_probas['Probas'] = predict_probas.reshape(-1)
-        # Select probas > 33%
-        df_predict_probas = df_predict_probas[df_predict_probas['Probas']>=0.33]            .sort_values('Probas', ascending=False)
+        # Select probas > 20%
+        df_predict_probas = df_predict_probas[df_predict_probas['Probas']>=0.20].sort_values('Probas', ascending=False)
             
         # Results
         results = {}
         results['Predicted_Tags'] = tags_predict
-        results['Predicted_Tags_Probabilities'] = df_predict_probas            .set_index('Tags')['Probas'].to_dict()
+        results['Predicted_Tags_Probabilities'] = df_predict_probas.set_index('Tags')['Probas'].to_dict()
         
         return results, 200
 
