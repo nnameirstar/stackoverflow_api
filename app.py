@@ -26,7 +26,7 @@ template = {
 
 swagger = Swagger(app, template=template)
 # Load pre-trained models
-model_path = "static/models/"
+model_path = "models/"
 vectorizer = joblib.load(model_path + "tfidf_vectorizer.pkl", 'r')
 multilabel_binarizer = joblib.load(model_path + "multilabel_binarizer.pkl", 'r')
 model = joblib.load(model_path + "logit_nlp_model.pkl", 'r')
