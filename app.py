@@ -1,9 +1,5 @@
 #!/usr/bin/env python
 # coding: utf-8
-
-# In[1]:
-
-
 from flask import Flask
 from flask_restful import Api, Resource
 import pandas as pd
@@ -27,26 +23,21 @@ app = Flask(__name__)
 api = Api(app)
 
 
-# In[3]:
+def garder_nom(x):
+    text = []
+    for token in x:
+        if token.pos_ in ["NOUN","PROPN"]:
+            text.append(token.text)
+    text=" ".join(text)
+    text = text.lower().replace("c #", "c#")
+    return text
 
 
-def remove_pos(nlp, x, pos_list): 
-    doc = nlp(x)
-    list_text_row = []
-    for token in doc:
-        if(token.pos_ in pos_list):
-            list_text_row.append(token.text)
-    join_text_row = " ".join(list_text_row)
-    join_text_row = join_text_row.lower().replace("c #", "c#")
-    return join_text_row
-
-
-# In[4]:
-
-
-def text_cleaner(x, nlp, pos_list, lang="english"):
+def text_cleaner(x):
     # Remove POS not in "NOUN", "PROPN"
-    x = remove_pos(nlp, x, pos_list)
+    nlp = spacy.load('en_core_web_sm', exclude=['tok2vec', 'ner', 'parser', 'attribute_ruler', 'lemmatizer'])
+    x=nlp(x)
+    x=garder_nom(x)
     # Case normalization
     x = x.lower()
     # Remove unicode characters
@@ -125,9 +116,7 @@ class Autotag(Resource):
                                type: string
                                description: List of tags with over 30% of probabilities
         """
-        # Clean the question sent
-        nlp = en_core_web_sm.load(exclude=['tok2vec', 'ner', 'parser', 'attribute_ruler', 'lemmatizer'])
-        #nlp = spacy.load('en_core_web_md', exclude=['tok2vec', 'ner', 'parser', 'attribute_ruler', 'lemmatizer'])
+        nlp = spacy.load('en_core_web_sm', exclude=['tok2vec', 'ner', 'parser', 'attribute_ruler', 'lemmatizer'])
         pos_list = ["NOUN","PROPN"]
         rawtext = question
         cleaned_question = text_cleaner(rawtext, nlp, pos_list, "english")
